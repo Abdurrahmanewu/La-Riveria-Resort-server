@@ -31,6 +31,9 @@ async function run() {
     const packageCollection = client
       .db("La-Riveria-Resort-DB")
       .collection("packages");
+    const bookingCollection = client
+      .db("La-Riveria-Resort-DB")
+      .collection("bookings");
 
     // Packages API
 
@@ -44,6 +47,30 @@ async function run() {
       console.log(id);
       const query = { _id: new ObjectId(id) };
       const result = await packageCollection.findOne(query);
+      res.send(result);
+    });
+
+    // Booking API
+    app.post("/bookings", async (req, res) => {
+      const bookingItem = req.body;
+      const result = await bookingCollection.insertOne(bookingItem);
+      res.send(result);
+    });
+    // app.get("/bookings", async (req, res) => {
+    //   const query = {};
+    //   const result = await bookingCollection.find(query).toArray();
+    //   res.send(result);
+    // });
+    app.get("/bookings", async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const result = await bookingCollection.find(query).toArray();
+      res.send(result);
+    });
+    app.delete("/bookings/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookingCollection.deleteOne(query);
       res.send(result);
     });
 
