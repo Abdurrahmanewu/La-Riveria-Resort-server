@@ -54,19 +54,18 @@ async function run() {
     });
 
     // Booking API
-    
 
     app.get("/bookings", async (req, res) => {
-      const email = req.query.email;
-      const query = { email: email };
-      const result = await bookingCollection.find(query).toArray();
-      res.send(result);
+      let query = {};
+      if (req.query.email) {
+        query = { email: req.query.email };
+        const result = await bookingCollection.find(query).toArray();
+        res.send(result);
+      } else {
+        const result = await bookingCollection.find().toArray();
+        res.send(result);
+      }
     });
-
-    // app.get("/bookings", async (req, res) => {
-    //   const result = await bookingCollection.find().toArray();
-    //   res.send(result);
-    // });
 
     app.post("/bookings", async (req, res) => {
       const bookingItem = req.body;
@@ -83,8 +82,15 @@ async function run() {
 
     // Reviews API
     app.get("/reviews", async (req, res) => {
-      const result = await reviewsCollection.find().toArray();
-      res.send(result);
+      let query = {};
+      if (req.query.email) {
+        query = { email: req.query.email };
+        const result = await reviewsCollection.find(query).toArray();
+        res.send(result);
+      } else {
+        const result = await reviewsCollection.find().toArray();
+        res.send(result);
+      }
     });
     app.post("/reviews", async (req, res) => {
       const reviewItem = req.body;
